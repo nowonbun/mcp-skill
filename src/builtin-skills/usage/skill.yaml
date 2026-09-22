@@ -1,0 +1,14 @@
+name: usage
+version: 1.0.0
+description: SkillPort MCP에서 필요한 Skill만 검색하고 읽는 기본 사용 지침
+category: general
+tags:
+  - skillport
+  - mcp
+  - usage
+entrypoint: SKILL.md
+compatible:
+  - codex
+  - claude
+  - chatgpt
+status: deployed

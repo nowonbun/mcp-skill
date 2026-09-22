@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkillPort · AI Skill 관리</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">Skill<span>Port</span></div>
+
+        <nav aria-label="기본 메뉴">
+          <button data-page="dashboard"><span>⌂</span> 대시보드</button>
+          <button data-page="skills"><span>▦</span> Skill 목록</button>
+          <button data-page="create"><span>⊕</span> Skill 등록</button>
+          <button data-page="logs"><span>▤</span> 접속 로그</button>
+        </nav>
+
+        <div class="sidebar-foot">
+          <div class="avatar dark">S</div>
+          <div>
+            <strong>SkillPort</strong>
+            <small>로컬 전용</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <h1 id="page-title">대시보드</h1>
+            <p id="page-description"></p>
+          </div>
+        </header>
+
+        <div id="notice" role="status"></div>
+        <div id="view"></div>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

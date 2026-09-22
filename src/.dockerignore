@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.env.*
+node_modules
+dist
+.npm-cache
+data
+skills
+test
+README.md
+compose.yaml
+docker-compose.yml
+Dockerfile
