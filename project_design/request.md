@@ -110,7 +110,7 @@ dependencies: []
 
 ## 4. Skill 선택 방식
 
-Agent는 사용자 요청을 분석한 뒤 필요한 Skill을 선택한다.
+SkillPort MCP가 연결된 Agent는 새 사용자 작업마다 작업 내용으로 Skill을 한 번 검색한다. 검색 결과에서 현재 작업에 필요한 Skill이 있는지 판단한다.
 
 예:
 
@@ -121,7 +121,7 @@ User:
         ↓
 
 Agent:
-데이터 모델링 관련 Skill 필요 판단
+사용자 작업에서 검색어 추출
 
         ↓
 
@@ -144,7 +144,7 @@ SKILL.md 로딩
 Skill 지침을 적용하여 작업 수행
 ```
 
-Skill을 사용하지 않아도 처리 가능한 요청은 MCP Skill을 호출하지 않는다.
+일치하는 Skill이 없거나 본문 지침이 필요하지 않은 요청은 `get_skill`을 호출하지 않고 일반 방식으로 처리한다. 검색 자체는 생략하지 않는다.
 
 ---
 
@@ -451,15 +451,15 @@ User Request
 Intent 분석
      │
      ▼
-Skill 필요 여부 판단
-     │
-     ├── 필요 없음 ──→ 일반 Agent 처리
-     │
-     ▼
 Skill 검색
      │
      ▼
 Candidate Skill
+     │
+     ▼
+Skill 필요 여부 판단
+     │
+     ├── 필요 없음 ──→ 일반 Agent 처리
      │
      ▼
 필요 Skill 선택

@@ -461,6 +461,7 @@ function createHttpServer(
   });
 }
 
+await logs.init();
 await registerBuiltinUsage();
 
 if (process.argv.includes('--stdio')) {

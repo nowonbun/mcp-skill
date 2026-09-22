@@ -11,7 +11,6 @@ import { createSkillServer, type SkillPolicy } from '../lib/mcp.ts';
 
 async function setup(t: test.TestContext, policy: SkillPolicy) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'skillport-mcp-'));
-  t.after(() => fs.rm(directory, { recursive: true, force: true }));
 
   const registry = new Registry(path.join(directory, 'skills'));
   const logs = new LogStore(path.join(directory, 'data'));
@@ -37,6 +36,8 @@ async function setup(t: test.TestContext, policy: SkillPolicy) {
   t.after(async () => {
     await client.close();
     await handler.close();
+    await logs.close();
+    await fs.rm(directory, { recursive: true, force: true });
   });
   return { registry, client };
 }

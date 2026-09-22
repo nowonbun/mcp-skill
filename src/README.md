@@ -18,7 +18,7 @@ Compose는 웹과 MCP 포트를 기본적으로 모든 호스트 인터페이스
 
 ## 로컬 Node.js 실행
 
-Node.js 22 이상이 필요합니다. 첫 실행 전 의존 패키지 설치와 TypeScript 빌드가 필요합니다.
+Node.js 22.13 이상이 필요합니다. 로그 저장에 내장 `node:sqlite`를 사용합니다. 첫 실행 전 의존 패키지 설치와 TypeScript 빌드가 필요합니다.
 
 ```powershell
 cd D:\work\mcp-skill\src
@@ -31,7 +31,7 @@ npm start
 
 웹 포트는 `WEB_PORT`(기본 3200), MCP 포트는 `MCP_PORT`(기본 3201)로 변경할 수 있습니다. 두 포트는 서로 달라야 합니다. 기존 `PORT` 환경 변수는 웹 포트의 대체 값으로만 사용됩니다.
 
-stdio 방식 MCP 클라이언트에서는 명령 `node`, 인수 `D:\work\mcp-skill\src\dist\server.js --stdio`를 등록합니다. 또는 이 디렉터리에서 `npm run mcp`를 사용할 수 있습니다. stdio 실행 중 로그는 표준 출력에 기록하지 않고 `data/access.ndjson`에 저장합니다.
+stdio 방식 MCP 클라이언트에서는 명령 `node`, 인수 `D:\work\mcp-skill\src\dist\server.js --stdio`를 등록합니다. 또는 이 디렉터리에서 `npm run mcp`를 사용할 수 있습니다. stdio 실행 중 로그는 표준 출력에 기록하지 않고 `data/access.sqlite`에 저장합니다.
 
 ### Codex에 MCP와 클라이언트 Skill 등록
 
@@ -57,12 +57,14 @@ enabled = true
 - MCP Resources: `skill://<name>` 및 `skill://<name>/<version>`
 - `/mcp`는 공식 SDK의 Streamable HTTP 핸들러로 제공합니다. JSON 응답 모드와 stdio 실행을 지원합니다.
 - 관리 화면: 대시보드, Skill 검색·상세·상태 변경·새 버전 편집, URL 원본 업데이트 확인·수동 적용, GitHub URL·파일 업로드·직접 입력 등록, MCP HTTP 포트가 표시되는 접속 로그
-- 저장 위치: `skills/<name>/skill.yaml`, `SKILL.md`, `.versions/<version>.json`; 로그는 `data/access.ndjson`에 저장합니다.
+- 저장 위치: `skills/<name>/skill.yaml`, `SKILL.md`, `.versions/<version>.json`; 로그는 `data/access.sqlite`에 저장합니다.
 - 신규 버전은 `PUT /api/skills/<name>`으로 등록합니다. 기존 버전을 덮어쓰지 않습니다.
 
 ## 웹 등록 데이터 저장 위치
 
-SQLite는 사용하지 않습니다. 웹에서 등록한 Skill은 서버의 `skills/<name>/skill.yaml`(메타데이터), `skills/<name>/SKILL.md`(본문), `skills/<name>/.versions/<version>.json`(버전 스냅샷)에 파일로 저장됩니다. 접속 로그는 `data/access.ndjson`에 저장됩니다.
+웹에서 등록한 Skill은 서버의 `skills/<name>/skill.yaml`(메타데이터), `skills/<name>/SKILL.md`(본문), `skills/<name>/.versions/<version>.json`(버전 스냅샷)에 파일로 저장됩니다. MCP 도구·리소스 호출 로그만 SQLite `data/access.sqlite`에 저장됩니다. 기존 `access.ndjson`은 가져오거나 삭제하지 않으며, 전환 후 발생한 로그부터 SQLite에 쌓입니다. 로그 API는 최신 순서로 최대 500건을 조회하며 `limit`, `offset`, `status`, `skill`, `query` 필터를 지원합니다. 자유 텍스트 `query`는 전체 텍스트 인덱스를 사용하지 않으므로 대량 로그에서 느릴 수 있습니다.
+
+SQLite로 전환해도 로그를 자동 삭제하지는 않습니다. 장기 보관 시 파일 크기가 계속 늘 수 있으므로 보관 기간과 정리 정책은 별도로 결정해야 합니다. 이 구현은 Node.js 22의 실험적 `node:sqlite` API를 사용합니다.
 
 - Docker Compose: 컨테이너의 `/app/skills`와 `/app/data`가 각각 `D:\work\mcp-skill\src\data\skills`, `D:\work\mcp-skill\src\data\data`에 연결됩니다.
 - 로컬 Node.js 실행: `D:\work\mcp-skill\src\skills`와 `D:\work\mcp-skill\src\data`에 저장됩니다.
