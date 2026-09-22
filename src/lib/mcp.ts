@@ -29,25 +29,25 @@ function isAllowed(skill: SkillMetadata, policy: SkillPolicy): boolean {
 
 function usage() {
   return {
-    purpose: '필요한 Skill만 검색하고 선택적으로 본문을 읽습니다.',
+    purpose: '새 작업마다 Skill을 한 번 검색하고, 일치하는 Skill의 본문만 읽습니다.',
     workflow: [
       {
         step: 1,
-        action: '현재 요청에 별도 Skill이 필요한지 판단합니다. 필요 없으면 조회하지 않습니다.',
-      },
-      {
-        step: 2,
         tool: 'search_skills',
         arguments: { query: '작업 관련 검색어' },
         optionalArguments: ['agent'],
-        action: '이름·설명·태그 등의 메타데이터로 후보를 찾습니다.',
+        action: '새 사용자 작업을 시작할 때 한 번 호출합니다. Skill 필요성 판단으로 검색을 생략하지 않습니다.',
+      },
+      {
+        step: 2,
+        action: '검색 결과의 이름·설명·태그 등으로 현재 작업에 맞는 Skill만 선택합니다. 일치하는 Skill이 없으면 본문을 가져오지 않습니다.',
       },
       {
         step: 3,
         tool: 'list_skills',
         arguments: {},
         optionalArguments: ['category', 'agent'],
-        action: '검색어를 정하기 어렵거나 전체 목록이 필요할 때만 사용합니다.',
+        action: '전체 목록이 추가로 필요할 때만 사용합니다. 첫 검색을 대체하지 않습니다.',
       },
       {
         step: 4,
@@ -68,6 +68,7 @@ function usage() {
       '목록과 검색은 본문을 반환하지 않습니다.',
       '모든 Skill 본문을 미리 가져오거나 의존 Skill을 자동 로딩하지 않습니다.',
       '조회 결과가 없거나 오류가 나면 Skill 내용을 추측하지 않습니다.',
+      '같은 작업에서는 검색을 반복하지 않고, 요청 대상이나 실행 범위가 바뀌면 다시 검색합니다.',
     ],
   };
 }
@@ -81,7 +82,7 @@ export function createSkillServer(
   const server = new McpServer(
     { name: 'skillport', version: '0.2.0' },
     {
-      instructions: '사용법이 필요하면 usage 도구를 한 번 호출하세요. Skill 본문을 미리 전부 읽지 말고, 검색 결과에서 필요한 Skill만 선택해 읽으세요.',
+      instructions: '새 사용자 작업을 시작할 때 search_skills를 한 번 호출하세요. 일치하는 Skill이 있으면 해당 본문만 읽고, 없으면 일반 방식으로 진행하세요. 같은 작업에서는 검색을 반복하지 말고, 요청 대상이나 실행 범위가 바뀌면 다시 검색하세요. 자세한 사용법은 usage 도구로 확인할 수 있습니다.',
     },
   );
 

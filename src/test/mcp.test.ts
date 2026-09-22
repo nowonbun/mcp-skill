@@ -48,6 +48,13 @@ test('공식 SDK: 메타데이터 조회 후 본문 지연 로딩', async t => {
 
   const usage = await client.callTool({ name: 'usage', arguments: {} });
   assert.ok(JSON.stringify(usage).includes('search_skills'));
+  const usageResult = (usage.structuredContent as { result: {
+    workflow: { tool?: string; action: string }[];
+    constraints: string[];
+  } }).result;
+  assert.equal(usageResult.workflow[0].tool, 'search_skills');
+  assert.match(usageResult.workflow[0].action, /새 사용자 작업/);
+  assert.ok(usageResult.constraints.some(item => item.includes('같은 작업에서는 검색을 반복하지')));
 
   const listed = await client.callTool({
     name: 'list_skills',

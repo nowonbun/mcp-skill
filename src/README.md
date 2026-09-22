@@ -33,6 +33,22 @@ npm start
 
 stdio 방식 MCP 클라이언트에서는 명령 `node`, 인수 `D:\work\mcp-skill\src\dist\server.js --stdio`를 등록합니다. 또는 이 디렉터리에서 `npm run mcp`를 사용할 수 있습니다. stdio 실행 중 로그는 표준 출력에 기록하지 않고 `data/access.ndjson`에 저장합니다.
 
+### Codex에 MCP와 클라이언트 Skill 등록
+
+Codex의 사용자 설정 파일 `~/.codex/config.toml`(Windows에서는 `%USERPROFILE%\.codex\config.toml`)에 다음 내용을 추가합니다. `url`에는 Markdown 링크가 아닌 일반 문자열을 넣습니다. 서버 주소·포트를 변경했다면 실제 MCP HTTP 주소로 바꾸세요.
+
+```toml
+[mcp_servers.mcp_skill]
+url = "http://192.168.1.201:3201/mcp"
+default_tools_approval_mode = "approve"
+
+[[skills.config]]
+path = "D:/work/mcp-skill/skills/skillport-client/SKILL.md"
+enabled = true
+```
+
+`mcp_skill`은 Codex에서 이 서버를 식별하는 설정 이름입니다. `[[skills.config]]`의 경로는 서버에 등록되는 Skill 저장소가 아니라 로컬 클라이언트 스킬 파일을 가리킵니다. 다른 컴퓨터에서 Codex를 사용한다면 그 컴퓨터에서 접근 가능한 `SKILL.md` 경로로 바꿔야 합니다. 설정을 저장한 뒤 Codex를 재시작하고 `/mcp`에서 서버 연결을 확인하세요. [Codex MCP 설정](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)과 [로컬 Skill 설정](https://learn.chatgpt.com/docs/build-skills)을 참고할 수 있습니다.
+
 기본 Node.js 실행은 `127.0.0.1`에만 바인딩됩니다. Docker는 컨테이너 내부에서 `0.0.0.0`으로 대기합니다. 공개 웹과 MCP에는 인증 기능이 없으므로 인터넷에 무제한으로 노출하지 말고 서버 방화벽 또는 리버스 프록시에서 허용 IP와 TLS를 설정하세요. `Host`·`Origin` 검사는 인증을 대신하지 않습니다.
 
 ## 기능
@@ -53,6 +69,8 @@ SQLite는 사용하지 않습니다. 웹에서 등록한 Skill은 서버의 `ski
 - `D:\work\mcp-skill\skills`의 클라이언트 부트스트랩 스킬은 서버 저장소와 별개입니다.
 
 내장 `usage` Skill 원본은 `builtin-skills/usage`에 있습니다. 서버 시작 시 등록된 `usage`가 없을 때만 이를 저장소에 추가하며, 웹에서 이미 등록·변경한 `usage`는 덮어쓰지 않습니다.
+
+클라이언트 스킬과 MCP `usage` 도구는 새 사용자 작업마다 `search_skills`를 한 번 호출하도록 안내합니다. 검색 결과에 맞는 Skill이 있을 때만 본문을 읽고, 같은 작업에서는 재검색하지 않습니다. 요청 대상이나 실행 범위가 바뀐 경우에만 다시 검색합니다. 기존에 저장된 `usage` Skill 본문은 서버 재시작으로 자동 변경되지 않으므로 관리 웹에서 새 버전으로 직접 갱신해야 합니다.
 
 ## Skill 등록 형식
 
