@@ -12,9 +12,9 @@ docker compose up --build -d
 docker compose ps
 ```
 
-웹 화면은 기본값 `http://127.0.0.1:3200`입니다. MCP 클라이언트는 **별도 포트** `http://127.0.0.1:3201/mcp`를 사용합니다. 인증 헤더는 필요하지 않습니다. 포트는 `.env`의 `WEB_PORT`, `MCP_PORT`로 변경할 수 있습니다.
+Docker에서 웹 화면은 기본값 `http://<서버-IP>:3200`으로 접속합니다. MCP HTTP는 `http://<서버-IP>:3201/mcp`를 사용합니다. 두 서비스 모두 인증 헤더는 필요하지 않습니다. 포트는 `.env`의 `WEB_PORT`, `MCP_PORT`로 변경할 수 있습니다.
 
-Compose는 웹 `127.0.0.1:3200`과 MCP `127.0.0.1:3201`만 공개합니다. Skill 파일과 로그·설정은 각각 호스트의 `src/data/skills`, `src/data/data`를 컨테이너에 연결해 유지합니다. `docker compose down`은 이 호스트 파일을 삭제하지 않습니다.
+Compose는 웹과 MCP 포트를 기본적으로 모든 호스트 인터페이스에 공개합니다. `PUBLIC_WEB_ACCESS=true`, `PUBLIC_MCP_ACCESS=true`이면 각각 서버 IP·도메인 Host를 허용합니다. 웹을 로컬 전용으로 제한하려면 `.env`에서 `WEB_BIND_IP=127.0.0.1`, `PUBLIC_WEB_ACCESS=false`를 함께 설정하세요. MCP를 로컬 전용으로 제한하려면 `MCP_BIND_IP=127.0.0.1`, `PUBLIC_MCP_ACCESS=false`를 함께 설정하세요. Skill 파일과 로그·설정은 각각 호스트의 `src/data/skills`, `src/data/data`를 컨테이너에 연결해 유지합니다. `docker compose down`은 이 호스트 파일을 삭제하지 않습니다.
 
 ## 로컬 Node.js 실행
 
@@ -33,7 +33,7 @@ npm start
 
 stdio 방식 MCP 클라이언트에서는 명령 `node`, 인수 `D:\work\mcp-skill\src\dist\server.js --stdio`를 등록합니다. 또는 이 디렉터리에서 `npm run mcp`를 사용할 수 있습니다. stdio 실행 중 로그는 표준 출력에 기록하지 않고 `data/access.ndjson`에 저장합니다.
 
-기본 Node.js 실행은 `127.0.0.1`에만 바인딩됩니다. Docker는 컨테이너 내부에서 `0.0.0.0`으로 대기하지만 Compose가 호스트 포트를 `127.0.0.1`에만 공개합니다. 인증이 없으므로 포트를 외부 네트워크에 공개하지 마세요.
+기본 Node.js 실행은 `127.0.0.1`에만 바인딩됩니다. Docker는 컨테이너 내부에서 `0.0.0.0`으로 대기합니다. 공개 웹과 MCP에는 인증 기능이 없으므로 인터넷에 무제한으로 노출하지 말고 서버 방화벽 또는 리버스 프록시에서 허용 IP와 TLS를 설정하세요. `Host`·`Origin` 검사는 인증을 대신하지 않습니다.
 
 ## 기능
 
@@ -77,7 +77,7 @@ URL로 새로 등록한 Skill은 원본 URL과 당시 파일의 해시를 함께
 
 ## 주의할 점
 
-- 웹의 에이전트 관리와 시스템 설정 화면은 제공하지 않습니다. 기존 `data/settings.json`이 있다면 `allowedSkills`·`allowedCategories` 정책은 MCP 조회에 계속 적용되지만, 웹에서 수정할 수 없습니다. 에이전트별 인증과 권한 집행은 구현되지 않았습니다. HTTP 서버는 로컬 전용이며, 외부 공유 시 별도 인증·TLS·네트워크 정책이 필요합니다.
+- 웹의 에이전트 관리와 시스템 설정 화면은 제공하지 않습니다. 기존 `data/settings.json`이 있다면 `allowedSkills`·`allowedCategories` 정책은 MCP 조회에 계속 적용되지만, 웹에서 수정할 수 없습니다. 에이전트별 인증과 권한 집행은 구현되지 않았습니다. 공개 웹·MCP에는 별도 방화벽·TLS·네트워크 정책이 필요합니다.
 - Git 변경 이력은 `skills/` 폴더를 Git으로 버전 관리하여 활용합니다. URL 원본의 수동 확인·업데이트 외에 Git push·PR·롤백 자동화는 구현되지 않았습니다.
 - Semantic Search, 의존 Skill 자동 로딩, Context 제거, Marketplace 기능은 확장 목표로 남아 있습니다. 의존성은 메타데이터로만 제공됩니다.
 

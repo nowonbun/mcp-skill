@@ -5,9 +5,11 @@ services:
     environment:
       WEB_PORT: "${WEB_PORT:-3200}"
       MCP_PORT: "${MCP_PORT:-3201}"
+      PUBLIC_WEB_ACCESS: "${PUBLIC_WEB_ACCESS:-true}"
+      PUBLIC_MCP_ACCESS: "${PUBLIC_MCP_ACCESS:-true}"
     ports:
-      - "${WEB_PORT:-3200}:${WEB_PORT:-3200}"
-      - "${MCP_PORT:-3201}:${MCP_PORT:-3201}"
+      - "${WEB_BIND_IP:-0.0.0.0}:${WEB_PORT:-3200}:${WEB_PORT:-3200}"
+      - "${MCP_BIND_IP:-0.0.0.0}:${MCP_PORT:-3201}:${MCP_PORT:-3201}"
     volumes:
       - ./data/skills:/app/skills
       - ./data/data:/app/data

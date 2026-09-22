@@ -451,8 +451,8 @@ async function renderLogs() {
     <div class="mcp-endpoint">
       <strong>MCP HTTP 포트</strong>
       <code>${escapeHtml(runtime.mcpPort)}</code>
-      <span>접속 주소: http://127.0.0.1:${escapeHtml(runtime.mcpPort)}/mcp</span>
-      <small>stdio 연결은 포트를 사용하지 않습니다.</small>
+      <span>${runtime.publicMcpAccess ? 'MCP 접속 주소' : '서버 내부 주소'}: http://${escapeHtml(runtime.publicMcpAccess ? window.location.hostname : '127.0.0.1')}:${escapeHtml(runtime.mcpPort)}/mcp</span>
+      <small>${runtime.publicMcpAccess ? 'MCP HTTP 공개 접속이 허용되어 있습니다. 인증이 없으므로 방화벽에서 접근 IP를 제한하세요.' : 'MCP HTTP는 서버 로컬 전용입니다.'} stdio 연결은 포트를 사용하지 않습니다.</small>
     </div>
     <div class="toolbar">
       <input id="log-search" class="input search"

@@ -41,6 +41,8 @@ async function registerBuiltinUsage(): Promise<void> {
 const host = process.env.HOST || '127.0.0.1';
 const webPort = Number(process.env.WEB_PORT || process.env.PORT || 3200);
 const mcpPort = Number(process.env.MCP_PORT || 3201);
+const publicWebAccess = process.env.PUBLIC_WEB_ACCESS === 'true';
+const publicMcpAccess = process.env.PUBLIC_MCP_ACCESS === 'true';
 
 const contentTypes: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -106,9 +108,13 @@ async function readJson(request: IncomingMessage): Promise<Record<string, unknow
   }
 }
 
-function validateLocalRequest(request: IncomingMessage): void {
+function validateRequest(request: IncomingMessage, allowPublicHost: boolean): void {
   const hostHeader = request.headers.host || '';
   const origin = request.headers.origin;
+
+  if (!hostHeader) {
+    throw new AppError('Host 헤더가 필요합니다.', 403);
+  }
 
   if (origin) {
     let originHost: string;
@@ -122,10 +128,12 @@ function validateLocalRequest(request: IncomingMessage): void {
     }
   }
 
-  // const requestedHost = hostHeader.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
-  // if (!['127.0.0.1', 'localhost', '::1'].includes(requestedHost)) {
-  //   throw new AppError('로컬 Host만 허용합니다.', 403);
-  // }
+  if (!allowPublicHost) {
+    const requestedHost = hostHeader.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
+    if (!['127.0.0.1', 'localhost', '::1'].includes(requestedHost)) {
+      throw new AppError('로컬 Host만 허용합니다.', 403);
+    }
+  }
 }
 
 async function fetchSkillFile(value: unknown): Promise<string> {
@@ -297,7 +305,7 @@ async function handleApi(
   const section = segments[1];
 
   if (section === 'runtime' && segments.length === 2 && method === 'GET') {
-    sendJson(response, 200, { mcpPort });
+    sendJson(response, 200, { mcpPort, publicMcpAccess });
     return;
   }
 
@@ -390,7 +398,7 @@ async function handleApi(
 }
 
 async function routeWeb(request: IncomingMessage, response: ServerResponse): Promise<void> {
-  validateLocalRequest(request);
+  validateRequest(request, publicWebAccess);
   const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
 
   if (url.pathname === '/health') {
@@ -423,7 +431,7 @@ async function routeWeb(request: IncomingMessage, response: ServerResponse): Pro
 }
 
 async function routeMcp(request: IncomingMessage, response: ServerResponse): Promise<void> {
-  validateLocalRequest(request);
+  validateRequest(request, publicMcpAccess);
   const url = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
 
   if (url.pathname === '/health') {
