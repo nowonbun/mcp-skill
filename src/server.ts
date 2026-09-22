@@ -122,10 +122,10 @@ function validateLocalRequest(request: IncomingMessage): void {
     }
   }
 
-  const requestedHost = hostHeader.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
-  if (!['127.0.0.1', 'localhost', '::1'].includes(requestedHost)) {
-    throw new AppError('로컬 Host만 허용합니다.', 403);
-  }
+  // const requestedHost = hostHeader.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
+  // if (!['127.0.0.1', 'localhost', '::1'].includes(requestedHost)) {
+  //   throw new AppError('로컬 Host만 허용합니다.', 403);
+  // }
 }
 
 async function fetchSkillFile(value: unknown): Promise<string> {
