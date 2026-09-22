@@ -40,7 +40,7 @@ stdio 방식 MCP 클라이언트에서는 명령 `node`, 인수 `D:\work\mcp-ski
 - MCP Tools: `usage`, `list_skills`, `search_skills`, `get_skill`, `get_skill_version`
 - MCP Resources: `skill://<name>` 및 `skill://<name>/<version>`
 - `/mcp`는 공식 SDK의 Streamable HTTP 핸들러로 제공합니다. JSON 응답 모드와 stdio 실행을 지원합니다.
-- 관리 화면: 대시보드, Skill 검색·상세·상태 변경·새 버전 편집, URL 원본 업데이트 확인·수동 적용, GitHub URL·파일 업로드·직접 입력 등록, 접속 로그
+- 관리 화면: 대시보드, Skill 검색·상세·상태 변경·새 버전 편집, URL 원본 업데이트 확인·수동 적용, GitHub URL·파일 업로드·직접 입력 등록, MCP HTTP 포트가 표시되는 접속 로그
 - 저장 위치: `skills/<name>/skill.yaml`, `SKILL.md`, `.versions/<version>.json`; 로그는 `data/access.ndjson`에 저장합니다.
 - 신규 버전은 `PUT /api/skills/<name>`으로 등록합니다. 기존 버전을 덮어쓰지 않습니다.
 

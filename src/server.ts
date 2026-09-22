@@ -295,6 +295,11 @@ async function handleApi(
   const method = request.method;
   const section = segments[1];
 
+  if (section === 'runtime' && segments.length === 2 && method === 'GET') {
+    sendJson(response, 200, { mcpPort });
+    return;
+  }
+
   if (section === 'skills' && segments.length === 2) {
     if (method === 'GET') {
       sendJson(response, 200, await registry.list(Object.fromEntries(url.searchParams)));

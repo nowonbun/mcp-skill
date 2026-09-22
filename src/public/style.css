@@ -450,6 +450,30 @@ h2 {
   min-width: 220px;
 }
 
+.mcp-endpoint {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid #dfe4ea;
+  border-radius: 7px;
+  background: #f8fafc;
+}
+
+.mcp-endpoint code {
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #e8eef8;
+  color: #24518b;
+  font-weight: 700;
+}
+
+.mcp-endpoint small {
+  color: #79818b;
+}
+
 .input,.select,textarea {
   border: 1px solid #d8dee5;
   background: #fff;

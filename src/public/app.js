@@ -431,7 +431,11 @@ async function updateSkillFromSource(name) {
 }
 
 async function renderLogs() {
-  state.logs = await api('/logs?limit=500');
+  const [logs, runtime] = await Promise.all([
+    api('/logs?limit=500'),
+    api('/runtime'),
+  ]);
+  state.logs = logs;
   const query = state.logQuery.toLowerCase();
   const filtered = state.logs.filter(log => {
     return (!query || JSON.stringify(log).toLowerCase().includes(query))
@@ -444,6 +448,12 @@ async function renderLogs() {
   const visible = filtered.slice((state.pageNumber - 1) * 10, state.pageNumber * 10);
 
   view.innerHTML = `
+    <div class="mcp-endpoint">
+      <strong>MCP HTTP 포트</strong>
+      <code>${escapeHtml(runtime.mcpPort)}</code>
+      <span>접속 주소: http://127.0.0.1:${escapeHtml(runtime.mcpPort)}/mcp</span>
+      <small>stdio 연결은 포트를 사용하지 않습니다.</small>
+    </div>
     <div class="toolbar">
       <input id="log-search" class="input search"
              placeholder="요청 ID, 에이전트, 메시지 검색"
