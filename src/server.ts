@@ -46,6 +46,7 @@ const contentTypes: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.ico': 'image/x-icon',
 };
 
 async function getPolicy(): Promise<SkillPolicy> {
@@ -407,7 +408,7 @@ async function routeWeb(request: IncomingMessage, response: ServerResponse): Pro
   }
 
   const name = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
-  if (!['index.html', 'app.js', 'style.css'].includes(name)) {
+  if (!['index.html', 'app.js', 'style.css', 'favicon.ico'].includes(name)) {
     sendJson(response, 404, { error: '페이지를 찾을 수 없습니다.' });
     return;
   }
