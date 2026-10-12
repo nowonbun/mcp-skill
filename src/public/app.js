@@ -291,7 +291,7 @@ function skillTable(rows) {
         <tbody>
           ${rows.map((skill, index) => `
             <tr>
-              <td>${(state.pageNumber - 1) * 8 + index + 1}</td>
+              <td>${index + 1}</td>
               <td><strong>${escapeHtml(skill.name)}</strong></td>
               <td>${escapeHtml(skill.description)}</td>
               <td>${tags(skill.tags)}</td>
@@ -343,10 +343,7 @@ async function renderSkills() {
     : a.name.localeCompare(b.name));
 
   const allTags = [...new Set(state.skills.flatMap(skill => skill.tags))].sort();
-  const pages = Math.max(1, Math.ceil(filtered.length / 8));
-  state.pageNumber = Math.min(state.pageNumber, pages);
-  const visible = filtered.slice((state.pageNumber - 1) * 8, state.pageNumber * 8);
-  const toCheck = visible
+  const toCheck = filtered
     .filter(skill => skill.source_url && !state.updateChecks[skill.name])
     .map(skill => skill.name);
   for (const name of toCheck) {
@@ -378,8 +375,7 @@ async function renderSkills() {
       </select>
       <button class="button primary" data-go="create">＋ 새 Skill 등록</button>
     </div>
-    <section class="card">${skillTable(visible)}</section>
-    ${pagination(filtered.length, 8)}
+    <section class="card">${skillTable(filtered)}</section>
   `;
   for (const name of toCheck) {
     void checkSkillUpdate(name, true);
