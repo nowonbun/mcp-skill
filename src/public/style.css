@@ -527,9 +527,35 @@ h2 {
 
 .pagination {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.pagination-summary {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 5px;
-  margin-top: 15px;
+}
+
+.pagination-controls .button {
+  flex: 0 0 auto;
+  min-width: 30px;
+  white-space: nowrap;
+}
+
+.pagination-ellipsis {
+  padding: 0 4px;
+  color: #7b8390;
 }
 
 .pagination button.active {

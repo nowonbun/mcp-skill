@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "dev": "tsx server.ts",
     "mcp": "node dist/server.js --stdio",
-    "test": "node --import tsx --test --test-isolation=none test/registry.test.ts test/mcp.test.ts test/logs.test.ts"
+    "test": "node --import tsx --test --test-isolation=none test/registry.test.ts test/mcp.test.ts test/logs.test.ts test/pagination.test.mjs"
   },
   "engines": { "node": ">=22.13.0" },
   "dependencies": {

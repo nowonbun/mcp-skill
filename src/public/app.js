@@ -107,18 +107,30 @@ function pagination(total, pageSize) {
   state.pageNumber = Math.min(state.pageNumber, count);
   const start = total ? (state.pageNumber - 1) * pageSize + 1 : 0;
   const end = Math.min(state.pageNumber * pageSize, total);
+  const first = Math.max(1, Math.min(state.pageNumber - 2, count - 4));
+  const last = Math.min(count, first + 4);
+  const numbers = [...new Set([
+    1,
+    ...Array.from({ length: last - first + 1 }, (_, index) => first + index),
+    count,
+  ])];
+  const buttons = numbers.map((number, index) => `
+    ${index && number - numbers[index - 1] > 1
+      ? '<span class="pagination-ellipsis" aria-hidden="true">…</span>' : ''}
+    <button class="button slim ${number === state.pageNumber ? 'active' : ''}"
+            data-page-number="${number}" ${number === state.pageNumber ? 'aria-current="page"' : ''}>${number}</button>
+  `).join('');
 
   return `
     <div class="pagination">
-      <span class="muted" style="margin-right:auto;align-self:center">
+      <span class="muted pagination-summary">
         전체 ${total}개 중 ${start}–${end}개
       </span>
-      ${Array.from({ length: count }, (_, index) => `
-        <button class="button slim ${index + 1 === state.pageNumber ? 'active' : ''}"
-                data-page-number="${index + 1}">
-          ${index + 1}
-        </button>
-      `).join('')}
+      <nav class="pagination-controls" aria-label="접속 이력 페이지">
+        <button class="button slim" data-page-number="${Math.max(1, state.pageNumber - 1)}" ${state.pageNumber === 1 ? 'disabled' : ''}>이전</button>
+        ${buttons}
+        <button class="button slim" data-page-number="${Math.min(count, state.pageNumber + 1)}" ${state.pageNumber === count ? 'disabled' : ''}>다음</button>
+      </nav>
     </div>
   `;
 }
