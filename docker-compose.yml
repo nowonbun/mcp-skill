@@ -1,3 +1,6 @@
+# 기존 src 디렉터리 실행 시의 Compose 프로젝트 이름을 유지합니다.
+name: src
+
 services:
   skillport:
     build:
@@ -11,8 +14,8 @@ services:
       - "${WEB_BIND_IP:-0.0.0.0}:${WEB_PORT:-3200}:${WEB_PORT:-3200}"
       - "${MCP_BIND_IP:-0.0.0.0}:${MCP_PORT:-3201}:${MCP_PORT:-3201}"
     volumes:
-      - ./data/skills:/app/skills
-      - ./data/data:/app/data
+      - ./src/data/skills:/app/skills
+      - ./src/data/data:/app/data
     restart: unless-stopped
     read_only: true
     security_opt:

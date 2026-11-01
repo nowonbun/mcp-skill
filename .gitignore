@@ -3,4 +3,6 @@ node_modules/
 dist/
 .npm-cache/
 .env
-.env.local
+.env.*
+
+!.env.example

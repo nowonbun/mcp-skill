@@ -4,10 +4,10 @@ Skill 메타데이터를 검색하고, 선택한 본문만 가져오는 TypeScri
 
 ## Docker Compose 실행
 
-Docker Engine과 Docker Compose가 실행 중이어야 합니다. 토큰 설정 없이 실행할 수 있습니다. 포트를 변경할 때만 `.env.example`을 `.env`로 복사해 값을 수정하세요. `.env`는 Git에서 제외됩니다.
+Docker Engine과 Docker Compose가 실행 중이어야 합니다. 토큰 설정 없이 실행할 수 있습니다. 포트를 변경할 때만 저장소 루트의 [`.env.example`](../.env.example)을 `.env`로 복사해 값을 수정하세요. `.env`는 Git에서 제외됩니다.
 
 ```powershell
-cd D:\work\mcp-skill\src
+cd D:\work\mcp-skill
 docker compose up --build -d
 docker compose ps
 ```
@@ -15,6 +15,8 @@ docker compose ps
 Docker에서 웹 화면은 기본값 `http://<서버-IP>:3200`으로 접속합니다. MCP HTTP는 `http://<서버-IP>:3201/mcp`를 사용합니다. 두 서비스 모두 인증 헤더는 필요하지 않습니다. 포트는 `.env`의 `WEB_PORT`, `MCP_PORT`로 변경할 수 있습니다.
 
 Compose는 웹과 MCP 포트를 기본적으로 모든 호스트 인터페이스에 공개합니다. `PUBLIC_WEB_ACCESS=true`, `PUBLIC_MCP_ACCESS=true`이면 각각 서버 IP·도메인 Host를 허용합니다. 웹을 로컬 전용으로 제한하려면 `.env`에서 `WEB_BIND_IP=127.0.0.1`, `PUBLIC_WEB_ACCESS=false`를 함께 설정하세요. MCP를 로컬 전용으로 제한하려면 `MCP_BIND_IP=127.0.0.1`, `PUBLIC_MCP_ACCESS=false`를 함께 설정하세요. Skill 파일과 로그·설정은 각각 호스트의 `src/data/skills`, `src/data/data`를 컨테이너에 연결해 유지합니다. `docker compose down`은 이 호스트 파일을 삭제하지 않습니다.
+
+Docker 설정과 환경 파일은 저장소 루트에 있으며, 데이터 경로는 기존 `src/data`를 유지합니다. Compose 프로젝트 이름은 기존과 같은 `src`입니다. 이전에 `-p` 또는 `COMPOSE_PROJECT_NAME`을 사용했다면 동일하게 지정하세요.
 
 ## 로컬 Node.js 실행
 

@@ -1,0 +1,11 @@
+**
+!src/
+!src/package.json
+!src/tsconfig.json
+!src/server.ts
+!src/lib/
+!src/lib/**
+!src/public/
+!src/public/**
+!src/builtin-skills/
+!src/builtin-skills/**

@@ -6,21 +6,23 @@ Skill을 등록·관리하는 웹 화면과, 등록된 Skill을 검색하고 필
 
 | 경로 | 내용 |
 | --- | --- |
-| [`src/`](src/) | 서버 소스, 관리 웹, Docker 설정 및 상세 실행 안내 |
+| [`src/`](src/) | 서버 소스, 관리 웹 및 상세 실행 안내 |
 | [`skills/skillport-client/`](skills/skillport-client/) | MCP에 접속하는 에이전트용 클라이언트 Skill |
 | [`project_design/`](project_design/) | 기능 요건과 디자인 자료 |
 
 ## Docker로 시작하기
 
 ```powershell
-cd D:\work\mcp-skill\src
+cd D:\work\mcp-skill
 docker compose up --build -d
 docker compose ps
 ```
 
-기본 접속 주소는 관리 웹 `http://<서버-IP>:3200`, MCP HTTP `http://<서버-IP>:3201/mcp`입니다. 포트와 공개 범위는 [`src/.env.example`](src/.env.example)을 참고해 `src/.env`에서 조정할 수 있습니다.
+기본 접속 주소는 관리 웹 `http://<서버-IP>:3200`, MCP HTTP `http://<서버-IP>:3201/mcp`입니다. 포트와 공개 범위는 [`.env.example`](.env.example)을 참고해 `.env`에서 조정할 수 있습니다.
 
 **웹과 MCP에는 인증 기능이 없습니다.** 외부에 공개할 경우 방화벽에서 접근 IP를 제한하고 TLS 적용을 검토하세요.
+
+Docker 실행 설정(`Dockerfile`, `docker-compose.yml`, `.dockerignore`)과 환경 파일(`.env`, `.env.example`)은 저장소 루트에 있습니다. 기존 컨테이너와의 연속성을 위해 Compose 프로젝트 이름은 `src`로 유지합니다. 이전에 `-p` 또는 `COMPOSE_PROJECT_NAME`을 지정했다면 같은 값을 계속 사용하세요.
 
 ## 데이터 위치
 
